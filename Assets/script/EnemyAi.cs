@@ -6,8 +6,11 @@ using UnityEngine.AI;
 public class EnemyAi : MonoBehaviour
 {
     public List<Transform> patrolPoints;
+    public PlayerController player;
+    public float viewAngle;
     
     private NavMeshAgent _navMeshAgent;
+    private bool _isPlayerNoticed;
 
     void Start()
     {
@@ -16,11 +19,45 @@ public class EnemyAi : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (_navMeshAgent.remainingDistance == 0)
+        NotisePlayerUpdate();
+        ChaseUpdate();
+
+        PatrolUpdate();
+    }
+    private void NotisePlayerUpdate()
+    {
+        var direction = player.transform.position - transform.position;
+        _isPlayerNoticed = false;
+        if (Vector3.Angle(transform.forward, direction) < viewAngle)
         {
-            PickNewPatrolPoint();
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + Vector3.up, direction, out hit))
+            {
+                if (hit.collider.gameObject == player.gameObject)
+                {
+                    _isPlayerNoticed = true;
+                }
+
+            }
+        }
+    }
+    private void PatrolUpdate()
+    {
+        if (!_isPlayerNoticed)
+        {
+            if (_navMeshAgent.remainingDistance == 0)
+            {
+                PickNewPatrolPoint();
+            }
+        }
+    }
+    private void ChaseUpdate()
+    {
+        if (_isPlayerNoticed)
+        {
+            _navMeshAgent.destination = player.transform.position;
         }
     }
     private void PickNewPatrolPoint()
