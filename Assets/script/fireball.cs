@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class fireball : MonoBehaviour
 {
+    
     public float Speed;
     public float lifetime;
     public float damage = 10;

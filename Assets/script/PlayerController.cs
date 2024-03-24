@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public float jampForce;
     public float speed;
     private Vector3 _moveVector;
+    public Animator animator;
     
     void Start()
     {
@@ -18,23 +19,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        _moveVector = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
-        {
-            _moveVector += transform.forward;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            _moveVector -= transform.forward;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            _moveVector += transform.right;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            _moveVector -= transform.right;
-        }
+        Movement();
 
         if (Input.GetKeyDown(KeyCode.Space) && _characterController.isGrounded)
         {
@@ -42,6 +27,32 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Movement()
+    {
+        _moveVector = Vector3.zero;
+        var run = 0;
+        if (Input.GetKey(KeyCode.W))
+        {
+            _moveVector += transform.forward;
+            run = 1;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            _moveVector -= transform.forward;
+            run = 2;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            _moveVector += transform.right;
+            run = 4;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            _moveVector -= transform.right;
+            run = 3;
+        }
+        animator.SetInteger("run", run);
+    }
 
     void FixedUpdate()
     {
