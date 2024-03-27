@@ -5,7 +5,12 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     // Start is called before the first frame update
+    
     public float value = 100;
+    public bool IsAlive()
+    {
+        return value > 0;
+    }
     void Start()
     {
 
